@@ -1,3 +1,5 @@
+import { Reveal } from '@/components/ui/reveal'
+
 const DATA_TYPES = [
   {
     number: '01',
@@ -58,17 +60,21 @@ export function DataTypesSection() {
         <p className="font-mono text-xs tracking-widest text-neutral-500">
           WHAT WE COLLECT
         </p>
-        <h2 className="mt-4 text-3xl font-medium tracking-tight text-neutral-50 md:text-4xl">
-          Six data types, one capture pipeline
-        </h2>
+        <Reveal blur y={18}>
+          <h2 className="mt-4 text-3xl font-medium tracking-tight text-neutral-50 md:text-4xl">
+            Six data types, one capture pipeline
+          </h2>
+        </Reveal>
 
         <div className="mt-10 divide-y divide-white/10 border-t border-white/10">
-          {DATA_TYPES.map((item) => (
-            <div
+          {DATA_TYPES.map((item, i) => (
+            <Reveal
               key={item.number}
-              className="grid grid-cols-1 gap-3 py-6 md:grid-cols-[3rem_1fr_1fr] md:gap-8"
+              delay={i * 0.07}
+              y={18}
+              className="group grid grid-cols-1 gap-3 py-6 transition-colors duration-300 hover:bg-white/[0.02] md:grid-cols-[3rem_1fr_1fr] md:gap-8"
             >
-              <span className="font-mono text-sm text-neutral-600">
+              <span className="font-mono text-sm text-neutral-600 transition-colors duration-300 group-hover:text-neutral-300">
                 {item.number}
               </span>
               <div>
@@ -94,7 +100,7 @@ export function DataTypesSection() {
                   <p key={spec}>{spec}</p>
                 ))}
               </div>
-            </div>
+            </Reveal>
           ))}
         </div>
       </div>
