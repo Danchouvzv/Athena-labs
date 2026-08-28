@@ -1,9 +1,31 @@
-import React from 'react'
+'use client'
+
+import React, { useEffect, useState } from 'react'
+import {
+  animate,
+  motion,
+  useMotionTemplate,
+  useMotionValue,
+  useReducedMotion,
+} from 'framer-motion'
 import { cn } from '@/lib/utils'
 
-/** Equirectangular (2:1) Earth map — 2048x1024, wraps seamlessly at the seam. */
-const DEFAULT_TEXTURE =
-  'https://threejs.org/examples/textures/planets/earth_atmos_2048.jpg'
+/** Equirectangular (2:1) Earth map, self-hosted so the loop and the marker
+ *  maths can rely on the exact aspect ratio. */
+const DEFAULT_TEXTURE = '/earth-texture.jpg'
+
+/** Seconds for one full revolution while free-spinning. */
+const SPIN_SECONDS = 30
+/** Seconds to glide from a free spin to the target longitude. */
+const SETTLE_SECONDS = 2.6
+
+export interface GlobeMarker {
+  lat: number
+  lon: number
+  label: string
+  /** Renders as a faint country caption rather than a pin with a pill. */
+  muted?: boolean
+}
 
 interface GlobeProps {
   /** Diameter in px. The lighting is tuned for 250, and scales proportionally. */
@@ -13,12 +35,18 @@ interface GlobeProps {
   showStars?: boolean
   /** Map texture. Must tile seamlessly left-to-right. */
   texture?: string
-  /**
-   * Width/height of the texture. With `background-size: cover` on a square box
-   * the map renders `size * aspect` wide, and one rotation must shift by exactly
-   * that much — otherwise the loop visibly jumps.
-   */
+  /** Width/height of the texture. The rotation wraps on exactly this. */
   textureAspect?: number
+  /** Magnification of the map. >1 zooms in and pulls mid-latitudes towards
+   *  the middle of the disc. */
+  zoom?: number
+  /** Longitude/latitude the globe eases onto once `settle` turns true. */
+  center?: { lat: number; lon: number }
+  /** Flip to true (e.g. when the section scrolls into view) to stop the spin
+   *  and glide to `center`. Without `center` the globe just keeps spinning. */
+  settle?: boolean
+  /** Revealed once the globe has come to rest. */
+  markers?: GlobeMarker[]
 }
 
 /** Star offsets, authored against a 250px globe and scaled with it. */
@@ -38,40 +66,91 @@ const Globe: React.FC<GlobeProps> = ({
   showStars = true,
   texture = DEFAULT_TEXTURE,
   textureAspect = 2,
+  zoom = 1,
+  center,
+  settle = false,
+  markers = [],
 }) => {
+  const reduce = useReducedMotion()
+
   const r = size / 250
   const px = (n: number) => `${n * r}px`
+
+  // Rendered size of the map behind the disc.
+  const mapW = size * textureAspect * zoom
+  const mapH = size * zoom
+
+  // Equirectangular projection -> pixels within the rendered map.
+  const mapX = (lon: number) => ((lon + 180) / 360) * mapW
+  const mapY = (lat: number) => ((90 - lat) / 180) * mapH
+
+  // Offset that puts `center` in the middle of the disc. Vertically we pin the
+  // top: the disc must stay covered, so only `zoom` moves the latitude down.
+  const targetX = center ? size / 2 - mapX(center.lon) : 0
+
+  const x = useMotionValue(0)
+  const backgroundPosition = useMotionTemplate`${x}px 0px`
+  const [atRest, setAtRest] = useState(false)
+
+  const shouldSettle = settle && !!center
+
+  useEffect(() => {
+    if (reduce) {
+      x.set(targetX)
+      setAtRest(true)
+      return
+    }
+
+    if (!shouldSettle) {
+      setAtRest(false)
+      // The map repeats every mapW, so sliding exactly one width loops seamlessly.
+      const from = x.get()
+      const controls = animate(x, [from, from - mapW], {
+        duration: SPIN_SECONDS,
+        ease: 'linear',
+        repeat: Infinity,
+      })
+      return () => controls.stop()
+    }
+
+    // Carry on in the same direction to the nearest equivalent longitude,
+    // so the globe decelerates instead of snapping backwards.
+    const current = x.get()
+    const k = Math.floor((current - targetX) / mapW)
+    const controls = animate(x, targetX + k * mapW, {
+      duration: SETTLE_SECONDS,
+      ease: [0.16, 1, 0.3, 1],
+    })
+    controls.then(() => setAtRest(true))
+    return () => controls.stop()
+  }, [shouldSettle, targetX, mapW, reduce, x])
 
   return (
     <>
       <style>
         {`
-          @keyframes earthRotate {
-            0% { background-position: 0 0; }
-            100% { background-position: var(--globe-shift, 400px) 0; }
-          }
           @keyframes twinkling { 0%,100% { opacity:0.1; } 50% { opacity:1; } }
           @keyframes twinkling-slow { 0%,100% { opacity:0.1; } 50% { opacity:1; } }
           @keyframes twinkling-long { 0%,100% { opacity:0.1; } 50% { opacity:1; } }
           @keyframes twinkling-fast { 0%,100% { opacity:0.1; } 50% { opacity:1; } }
+          @keyframes globePing {
+            0% { transform: scale(1); opacity: 0.55; }
+            70% { transform: scale(2.6); opacity: 0; }
+            100% { transform: scale(2.6); opacity: 0; }
+          }
         `}
       </style>
       <div className={cn('flex items-center justify-center', className)}>
-        {/* Positioning context for the stars, which must sit outside the
-            globe's overflow-hidden box to be visible. */}
-        <div
-          className="relative"
-          style={{ width: size, height: size }}
-        >
-          <div
+        {/* Positioning context for the stars and markers, which must sit
+            outside the globe's overflow-hidden box to be visible. */}
+        <div className="relative" style={{ width: size, height: size }}>
+          <motion.div
             className="absolute inset-0 rounded-full overflow-hidden"
             style={{
               backgroundImage: `url('${texture}')`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'left',
+              backgroundSize: `${mapW}px ${mapH}px`,
               backgroundRepeat: 'repeat-x',
-              animation: 'earthRotate 30s linear infinite',
-              ['--globe-shift' as string]: `${size * textureAspect}px`,
+              backgroundPosition,
               boxShadow: [
                 `0 0 ${px(20)} rgba(255,255,255,0.2)`,
                 `-${px(5)} 0 ${px(8)} #c3f4ff inset`,
@@ -82,6 +161,43 @@ const Globe: React.FC<GlobeProps> = ({
               ].join(', '),
             }}
           />
+
+          {/* Markers only make sense once the globe has stopped turning */}
+          {center &&
+            markers.map((m) => {
+              const mx = targetX + mapX(m.lon)
+              const my = mapY(m.lat)
+
+              return (
+                <motion.div
+                  key={m.label}
+                  className="absolute"
+                  style={{ left: mx, top: my, translateX: '-50%', translateY: '-50%' }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: atRest ? 1 : 0 }}
+                  transition={{ duration: 0.6, delay: atRest ? 0.15 : 0 }}
+                >
+                  {m.muted ? (
+                    <span className="whitespace-nowrap font-mono text-[10px] tracking-[0.2em] text-white/45">
+                      {m.label}
+                    </span>
+                  ) : (
+                    <span className="flex items-center gap-3">
+                      <span className="relative flex h-3 w-3 items-center justify-center">
+                        <span
+                          className="absolute h-3 w-3 rounded-full bg-white/70"
+                          style={{ animation: 'globePing 2.6s ease-out infinite' }}
+                        />
+                        <span className="relative h-2 w-2 rounded-full bg-white shadow-[0_0_12px_4px_rgba(255,255,255,0.65)]" />
+                      </span>
+                      <span className="whitespace-nowrap rounded-full border border-white/15 bg-black/70 px-3.5 py-1.5 font-mono text-[11px] tracking-[0.18em] text-neutral-100 backdrop-blur-md">
+                        {m.label}
+                      </span>
+                    </span>
+                  )}
+                </motion.div>
+              )
+            })}
 
           {/* Stars */}
           {showStars &&

@@ -5,6 +5,7 @@ import { ScalingSection } from '@/components/scaling-section'
 import { CoverageSection } from '@/components/coverage-section'
 import { AudienceSection } from '@/components/audience-section'
 import { CtaSection } from '@/components/cta-section'
+import { SiteFooter } from '@/components/site-footer'
 
 export default function Home() {
   return (
@@ -16,6 +17,7 @@ export default function Home() {
       <CoverageSection />
       <AudienceSection />
       <CtaSection />
+      <SiteFooter />
     </main>
   )
 }

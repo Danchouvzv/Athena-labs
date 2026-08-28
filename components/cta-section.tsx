@@ -43,10 +43,10 @@ export function CtaSection() {
             <span className="text-sm text-neutral-500">
               or write to{' '}
               <a
-                href="mailto:hello@athena-labs.ai"
+                href="mailto:talgatovdaniyal@gmail.com"
                 className="text-neutral-400 underline underline-offset-4 transition-colors hover:text-neutral-50"
               >
-                hello@athena-labs.ai
+                talgatovdaniyal@gmail.com
               </a>
             </span>
           </form>

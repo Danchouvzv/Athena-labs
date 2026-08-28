@@ -1,8 +1,16 @@
 'use client'
 
-import { motion, useReducedMotion } from 'framer-motion'
+import { useRef } from 'react'
+import { motion, useInView, useReducedMotion } from 'framer-motion'
 import Globe from '@/components/ui/globe'
 import { Reveal, EASE } from '@/components/ui/reveal'
+
+const ALMATY = { lat: 43.238, lon: 76.889 }
+
+const MARKERS = [
+  { ...ALMATY, label: 'ALMATY' },
+  { lat: 48.5, lon: 66.0, label: 'KAZAKHSTAN', muted: true },
+]
 
 const TIERS = [
   { tier: 'Tier I', label: 'Bimanual teleop and humanoid capture in the lab' },
@@ -19,29 +27,45 @@ const TIERS = [
 export function CoverageSection() {
   const reduce = useReducedMotion()
 
+  // The globe free-spins until this section is properly on screen, then
+  // glides to a stop over Almaty.
+  const sectionRef = useRef<HTMLElement>(null)
+  const inView = useInView(sectionRef, { once: true, amount: 0.45 })
+
   return (
     <section
+      ref={sectionRef}
       id="coverage"
-      className="relative overflow-hidden border-t border-white/10 bg-black"
+      className="relative flex items-center overflow-hidden border-t border-white/10 bg-black md:min-h-screen"
     >
-      {/* Globe lives inside this section only, clipped by overflow-hidden */}
-      <motion.div
-        className="pointer-events-none absolute right-[-140px] top-1/2 hidden -translate-y-1/2 md:block lg:right-[20px]"
-        initial={reduce ? { opacity: 0 } : { opacity: 0, scale: 0.85 }}
-        whileInView={reduce ? { opacity: 1 } : { opacity: 1, scale: 1 }}
-        viewport={{ once: true, amount: 0.15 }}
-        transition={{ duration: 1.4, ease: EASE }}
-      >
-        {/* Gentle drift, so the planet never feels pinned to the page */}
+      {/* Globe lives inside this section only, clipped by overflow-hidden.
+          Positioning stays on this plain div — framer writes an inline
+          `transform` that would otherwise overwrite `-translate-y-1/2`. */}
+      <div className="pointer-events-none absolute right-[-260px] top-1/2 hidden -translate-y-1/2 md:block lg:right-[-140px]">
         <motion.div
-          animate={reduce ? undefined : { y: [0, -14, 0] }}
-          transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
+          initial={reduce ? { opacity: 0 } : { opacity: 0, scale: 0.85 }}
+          whileInView={reduce ? { opacity: 1 } : { opacity: 1, scale: 1 }}
+          viewport={{ once: true, amount: 0.15 }}
+          transition={{ duration: 1.4, ease: EASE }}
         >
-          <Globe size={560} />
+          {/* Gentle drift, so the planet never feels pinned to the page */}
+          <motion.div
+            animate={reduce ? undefined : { y: [0, -14, 0] }}
+            transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
+          >
+            <Globe
+              size={820}
+              zoom={1.85}
+              center={ALMATY}
+              settle={inView}
+              markers={MARKERS}
+              showStars={false}
+            />
+          </motion.div>
         </motion.div>
-      </motion.div>
+      </div>
 
-      <div className="container relative z-10 py-28 md:py-40">
+      <div className="container relative z-10 w-full py-28 md:py-24">
         <p className="font-mono text-xs tracking-widest text-neutral-500">
           COVERAGE
         </p>
@@ -74,7 +98,14 @@ export function CoverageSection() {
 
         {/* On mobile the globe flows below the content instead of overlapping it */}
         <div className="mt-16 flex justify-center md:hidden">
-          <Globe size={280} />
+          <Globe
+            size={300}
+            zoom={1.85}
+            center={ALMATY}
+            settle={inView}
+            markers={[{ ...ALMATY, label: 'ALMATY' }]}
+            showStars={false}
+          />
         </div>
       </div>
     </section>

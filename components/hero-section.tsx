@@ -1,12 +1,18 @@
 'use client'
 
 import { motion, useReducedMotion } from 'framer-motion'
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight, Check, ChevronDown } from 'lucide-react'
 import { SplineScene } from '@/components/ui/splite'
 import { Spotlight } from '@/components/ui/spotlight'
 import { EASE } from '@/components/ui/reveal'
 
 const FORMATS = ['LeRobot', 'RLDS', 'Unitree G1 EDU', 'UMI', 'GELLO / leader-arms']
+
+const PROOF = [
+  'Failure & recovery episodes',
+  'Language-annotated',
+  'Consent-released',
+]
 
 export function HeroSection() {
   const reduce = useReducedMotion()
@@ -111,6 +117,22 @@ export function HeroSection() {
                 <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />
               </a>
             </motion.div>
+
+            {/* Proof points — what's rare about the data, not just how much */}
+            <motion.ul
+              variants={item}
+              className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-2 border-t border-white/10 pt-6"
+            >
+              {PROOF.map((point) => (
+                <li
+                  key={point}
+                  className="flex items-center gap-2 text-[13px] text-neutral-400"
+                >
+                  <Check className="h-3.5 w-3.5 shrink-0 text-neutral-600" />
+                  {point}
+                </li>
+              ))}
+            </motion.ul>
           </motion.div>
 
           {/* Right content — 3D robot */}
@@ -124,6 +146,12 @@ export function HeroSection() {
               scene="https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode"
               className="h-full w-full"
             />
+            {/* Dissolve the robot into the page instead of letting the
+                formats divider slice across its feet. */}
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black via-black/70 to-transparent"
+            />
           </motion.div>
         </div>
 
@@ -135,6 +163,21 @@ export function HeroSection() {
           transition={{ duration: 0.7, delay: 0.75, ease: EASE }}
         >
           <div className="flex flex-wrap items-center gap-x-10 gap-y-3">
+            <a
+              href="#what-we-collect"
+              aria-label="Scroll to what we collect"
+              className="group flex items-center gap-2 font-mono text-xs tracking-widest text-neutral-500 transition-colors hover:text-neutral-200"
+            >
+              <motion.span
+                animate={reduce ? undefined : { y: [0, 4, 0] }}
+                transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
+                className="flex"
+              >
+                <ChevronDown className="h-3.5 w-3.5" />
+              </motion.span>
+              SCROLL
+            </a>
+            <span aria-hidden className="h-4 w-px bg-white/10" />
             <p className="font-mono text-xs tracking-widest text-neutral-500">
               FORMATS
             </p>
