@@ -16,8 +16,10 @@ const DEFAULT_TEXTURE = '/earth-texture.jpg'
 
 /** Seconds for one full revolution while free-spinning. */
 const SPIN_SECONDS = 30
-/** Seconds to glide from a free spin to the target longitude. */
+/** Seconds to cover the last, partial turn onto the target longitude. */
 const SETTLE_SECONDS = 2.6
+/** Added to the glide for each whole extra revolution it has to fit in. */
+const TURN_SECONDS = 2.2
 
 export interface GlobeMarker {
   lat: number
@@ -45,6 +47,9 @@ interface GlobeProps {
   /** Flip to true (e.g. when the section scrolls into view) to stop the spin
    *  and glide to `center`. Without `center` the globe just keeps spinning. */
   settle?: boolean
+  /** Whole extra revolutions to run through before landing on `center`, on top
+   *  of the partial turn it already owes. One reads as a deliberate flourish. */
+  settleTurns?: number
   /** Revealed once the globe has come to rest. */
   markers?: GlobeMarker[]
 }
@@ -69,6 +74,7 @@ const Globe: React.FC<GlobeProps> = ({
   zoom = 1,
   center,
   settle = false,
+  settleTurns = 1,
   markers = [],
 }) => {
   const reduce = useReducedMotion()
@@ -113,17 +119,20 @@ const Globe: React.FC<GlobeProps> = ({
       return () => controls.stop()
     }
 
-    // Carry on in the same direction to the nearest equivalent longitude,
-    // so the globe decelerates instead of snapping backwards.
+    // Carry on in the same direction — to the nearest equivalent longitude,
+    // then `settleTurns` whole revolutions past it — so the globe winds up
+    // for a last lap and decelerates instead of snapping backwards.
     const current = x.get()
-    const k = Math.floor((current - targetX) / mapW)
+    const turns = Math.max(0, Math.round(settleTurns))
+    const k = Math.floor((current - targetX) / mapW) - turns
     const controls = animate(x, targetX + k * mapW, {
-      duration: SETTLE_SECONDS,
-      ease: [0.16, 1, 0.3, 1],
+      duration: SETTLE_SECONDS + turns * TURN_SECONDS,
+      // Picks up speed for the lap, then a long tail onto the mark.
+      ease: turns > 0 ? [0.45, 0, 0.1, 1] : [0.16, 1, 0.3, 1],
     })
     controls.then(() => setAtRest(true))
     return () => controls.stop()
-  }, [shouldSettle, targetX, mapW, reduce, x])
+  }, [shouldSettle, targetX, mapW, settleTurns, reduce, x])
 
   return (
     <>

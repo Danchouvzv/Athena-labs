@@ -1,18 +1,33 @@
 'use client'
 
 import { motion, useReducedMotion } from 'framer-motion'
-import { ArrowRight, Check, ChevronDown } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import { SplineScene } from '@/components/ui/splite'
 import { Spotlight } from '@/components/ui/spotlight'
 import { EASE } from '@/components/ui/reveal'
 
-const FORMATS = ['LeRobot', 'RLDS', 'Unitree G1 EDU', 'UMI', 'GELLO / leader-arms']
+/** Fades the canvas out before the bottom of the section, so the robot ends in
+ *  darkness rather than at a hard edge. */
+const BOTTOM_FADE =
+  'linear-gradient(to bottom, black 0%, black 56%, rgba(0,0,0,0.35) 76%, transparent 89%)'
+/** Softens the canvas' left and right edges into the page. */
+const SIDE_FADE =
+  'linear-gradient(to right, transparent 0%, black 9%, black 93%, transparent 100%)'
 
-const PROOF = [
-  'Failure & recovery episodes',
-  'Language-annotated',
-  'Consent-released',
-]
+/**
+ * Spline sizes its canvas from the render buffer, so it spills past the box we
+ * give it. A mask must therefore be pinned to that box and told not to tile —
+ * left on the default `repeat`, the gradient starts over below the element and
+ * hands the overflow back its full opacity.
+ */
+const mask = (image: string) => ({
+  maskImage: image,
+  WebkitMaskImage: image,
+  maskSize: '100% 100%',
+  WebkitMaskSize: '100% 100%',
+  maskRepeat: 'no-repeat',
+  WebkitMaskRepeat: 'no-repeat',
+})
 
 export function HeroSection() {
   const reduce = useReducedMotion()
@@ -41,7 +56,11 @@ export function HeroSection() {
 
   return (
     <section className="relative w-full overflow-hidden bg-black/[0.96]">
-      <Spotlight className="-top-40 left-0 md:left-60 md:-top-20" fill="white" />
+      {/* Follows the cursor across the whole hero. Pure white at full opacity
+          read as a glare sitting on top of the page, so it is now a wide, very
+          faint cool light — ambient, not a highlight. The position classes it
+          used to carry were dead: the component sets `left`/`top` inline. */}
+      <Spotlight size={560} fill="rgba(190,200,225,0.11)" />
 
       {/* Dot-grid texture */}
       <div
@@ -70,25 +89,13 @@ export function HeroSection() {
         transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
       />
 
-      <div className="container relative z-10 grid min-h-screen grid-rows-[1fr_auto] pt-24">
-        <div className="grid items-center gap-8 py-12 md:grid-cols-[1fr_1.15fr] md:gap-4 md:py-0">
+      <div className="container relative z-10 flex min-h-screen items-center pt-24">
+        <div className="grid w-full items-center gap-8 py-12 md:grid-cols-[1fr_1.15fr] md:gap-4 md:py-0">
           {/* Left content */}
           <motion.div variants={container} initial="hidden" animate="show">
-            <motion.div variants={item}>
-              <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] py-1.5 pl-2.5 pr-4 backdrop-blur-sm">
-                <span className="relative flex h-1.5 w-1.5">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400/70 [animation-duration:2s]" />
-                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-400" />
-                </span>
-                <span className="font-mono text-[11px] tracking-wider text-neutral-400">
-                  COLLECTING NOW — 6 DATA TYPES
-                </span>
-              </div>
-            </motion.div>
-
             <motion.h1
               variants={item}
-              className="mt-6 max-w-xl text-4xl font-medium leading-[1.1] tracking-tight md:text-[3.25rem]"
+              className="max-w-xl text-4xl font-medium leading-[1.1] tracking-tight md:text-[3.25rem]"
             >
               <span className="text-neutral-500">
                 Humanoid robots learn from people first —{' '}
@@ -117,80 +124,33 @@ export function HeroSection() {
                 <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />
               </a>
             </motion.div>
-
-            {/* Proof points — what's rare about the data, not just how much */}
-            <motion.ul
-              variants={item}
-              className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-2 border-t border-white/10 pt-6"
-            >
-              {PROOF.map((point) => (
-                <li
-                  key={point}
-                  className="flex items-center gap-2 text-[13px] text-neutral-400"
-                >
-                  <Check className="h-3.5 w-3.5 shrink-0 text-neutral-600" />
-                  {point}
-                </li>
-              ))}
-            </motion.ul>
           </motion.div>
 
           {/* Right content — 3D robot */}
           <motion.div
-            className="relative h-[380px] w-full md:h-[580px]"
+            className="relative h-[380px] w-full md:h-[620px]"
             initial={reduce ? { opacity: 0 } : { opacity: 0, scale: 0.92 }}
             animate={reduce ? { opacity: 1 } : { opacity: 1, scale: 1 }}
             transition={{ duration: 1.2, delay: 0.25, ease: EASE }}
           >
-            <SplineScene
-              scene="https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode"
-              className="h-full w-full"
-            />
-            {/* Dissolve the robot into the page instead of letting the
-                formats divider slice across its feet. */}
-            <div
-              aria-hidden
-              className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black via-black/70 to-transparent"
-            />
+            {/* The scene carries its own lit floor, which reads as a bright
+                smudge pasted over the page. Mask the canvas rather than
+                dimming it with an overlay: masked pixels go fully
+                transparent, so the glow disappears instead of showing
+                through, and the legs dissolve into the black instead of
+                being cut off by the container edge. */}
+            <div className="absolute inset-0" style={mask(BOTTOM_FADE)}>
+              {/* Nested so the two masks intersect — `mask-composite` is
+                  spelled differently in WebKit, nesting needs no prefix. */}
+              <div className="h-full w-full" style={mask(SIDE_FADE)}>
+                <SplineScene
+                  scene="https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode"
+                  className="h-full w-full"
+                />
+              </div>
+            </div>
           </motion.div>
         </div>
-
-        {/* Formats strip */}
-        <motion.div
-          className="border-t border-white/10 py-8"
-          initial={reduce ? { opacity: 0 } : { opacity: 0, y: 16 }}
-          animate={reduce ? { opacity: 1 } : { opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.75, ease: EASE }}
-        >
-          <div className="flex flex-wrap items-center gap-x-10 gap-y-3">
-            <a
-              href="#what-we-collect"
-              aria-label="Scroll to what we collect"
-              className="group flex items-center gap-2 font-mono text-xs tracking-widest text-neutral-500 transition-colors hover:text-neutral-200"
-            >
-              <motion.span
-                animate={reduce ? undefined : { y: [0, 4, 0] }}
-                transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
-                className="flex"
-              >
-                <ChevronDown className="h-3.5 w-3.5" />
-              </motion.span>
-              SCROLL
-            </a>
-            <span aria-hidden className="h-4 w-px bg-white/10" />
-            <p className="font-mono text-xs tracking-widest text-neutral-500">
-              FORMATS
-            </p>
-            {FORMATS.map((format) => (
-              <span
-                key={format}
-                className="text-sm text-neutral-400 transition-colors duration-200 hover:text-neutral-200"
-              >
-                {format}
-              </span>
-            ))}
-          </div>
-        </motion.div>
       </div>
     </section>
   )
