@@ -53,6 +53,11 @@
   * {
     @apply border-border;
   }
+  /* Every section is anchored from the nav, and the header floats over the
+     page — without this the section label lands underneath it. */
+  html {
+    scroll-padding-top: 7rem;
+  }
   body {
     @apply bg-background text-foreground;
   }

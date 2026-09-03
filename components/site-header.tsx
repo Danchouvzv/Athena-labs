@@ -9,6 +9,7 @@ const NAV_LINKS = [
   { href: '#what-we-collect', label: 'What we collect' },
   { href: '#coverage', label: 'Coverage' },
   { href: '#who-its-for', label: "Who it's for" },
+  { href: '#products', label: 'Products' },
 ]
 
 export function SiteHeader() {
