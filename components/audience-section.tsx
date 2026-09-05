@@ -3,23 +3,35 @@ import { Reveal } from '@/components/ui/reveal'
 const GROUPS = [
   {
     number: '01',
-    title: 'Data aggregators & marketplaces',
-    names: ['Micro1', 'Cortex AI', 'Sensei', 'Awign'],
+    title: 'STEM schools',
+    names: [
+      '$600 station',
+      'Block programming → Python',
+      '36-hour course included',
+    ],
   },
   {
     number: '02',
-    title: 'Foundation model & AI labs',
-    names: ['Physical Intelligence', 'Skild AI', 'NVIDIA (GR00T team)', 'Figure AI'],
+    title: 'Vocational colleges',
+    names: ['Setup and calibration practice', 'Parts replaced on site'],
   },
   {
     number: '03',
-    title: 'Humanoid & robot manufacturers',
-    names: ['1X Technologies', 'Agility Robotics', 'Apptronik', 'Boston Dynamics'],
+    title: 'Universities & labs',
+    names: [
+      '$1,500 research station',
+      'ROS2, PyTorch / LeRobot',
+      'Dataset capture and teleoperation',
+    ],
   },
   {
     number: '04',
-    title: 'Industrial automation',
-    names: ['Covariant', 'Universal Robots', 'KUKA', 'Toyota Research Institute'],
+    title: 'Factories & integrators',
+    names: [
+      'Safety-compliance monitoring',
+      'Defect detection',
+      'Turnkey edge deployments',
+    ],
   },
 ]
 
@@ -32,7 +44,7 @@ export function AudienceSection() {
         </p>
         <Reveal blur y={18}>
           <h2 className="mt-4 max-w-2xl text-3xl font-medium tracking-tight text-neutral-50 md:text-4xl">
-            Built for the teams training robot foundation models
+            Two directions, one stack
           </h2>
         </Reveal>
 

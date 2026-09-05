@@ -1,6 +1,7 @@
 import {
   ArrowUpRight,
   Cpu,
+  FlaskConical,
   GraduationCap,
   Hand,
   Package,
@@ -41,7 +42,19 @@ const PRODUCTS: Product[] = [
     summary:
       'Not another camera in the cloud — an AI box behind your own door.',
     description:
-      'An NVIDIA Jetson box plugs into the CCTV you already own and reads every stream on site: people, vehicles, PPE, restricted zones. No footage leaves the building — only the events do.',
+      'A fanless IP67 box plugs into the CCTV you already own and reads every stream on site: people, vehicles, PPE, restricted zones. Rated for 24/7 on a factory floor. No footage leaves the building — only the events do.',
+    facts: [
+      {
+        label: 'Edge AI Core',
+        value: '$2,450',
+        note: 'plus $300 a year for software upkeep',
+      },
+      {
+        label: 'Throughput',
+        value: '100 TOPS',
+        note: 'Jetson Orin, eight camera streams at once',
+      },
+    ],
     points: [
       {
         icon: ShieldCheck,
@@ -56,10 +69,10 @@ const PRODUCTS: Product[] = [
       {
         icon: Cpu,
         title: 'Inference stays on the box',
-        body: 'Detection and rule evaluation run on the Jetson’s own GPU, frame by frame, against the rules you set per zone.',
+        body: 'Detection and rule evaluation run on the Jetson Orin’s own GPU, frame by frame, against the rules you set per zone. The Vision Stack ships pre-installed.',
       },
     ],
-    uses: ['PPE compliance', 'Traffic & plates', 'Audience & attention'],
+    uses: ['PPE compliance', 'Defect detection', 'Traffic & plates'],
     href: site('argus'),
     cta: 'Request a demo',
   },
@@ -68,7 +81,7 @@ const PRODUCTS: Product[] = [
     name: 'Kratos',
     status: 'EDITION 01',
     tagline: 'Teleop stations for a new era of edtech robotics.',
-    summary: '$600 a kit — three schools already running it.',
+    summary: '$600 for the classroom, $1,500 for the lab.',
     description:
       'A student drives the follower arm through the leader arm and feels the task before a model ever sees it. Every run is recorded as a dataset, and that dataset is what the policy learns from.',
     facts: [
@@ -95,9 +108,14 @@ const PRODUCTS: Product[] = [
         body: 'Two SO-101 arms, leader and follower, with cameras and mounts — assembled, wired and calibrated before it ships. Ubuntu, Python and the training stack come pre-installed and version-pinned.',
       },
       {
+        icon: FlaskConical,
+        title: 'A research tier when the class outgrows it',
+        body: 'The $1,500 station adds the precision a lab needs: ROS2 and PyTorch / LeRobot end to end, dataset capture, reinforcement learning and teleoperation — the functionality of $5,000+ rigs.',
+      },
+      {
         icon: GraduationCap,
         title: 'Curriculum and teacher training',
-        body: 'Lesson plans for every grade, classroom-tested in three schools first. We train your teacher until they can run the class without us, then stay on call for the school year.',
+        body: 'A finished 36-hour course in Russian, written against the school programme and classroom-tested in three schools first. We train your teacher until they can run the class without us, then stay on call for the school year.',
       },
     ],
     uses: ['Dataset capture', 'Policy training', 'Autonomous rollout'],
@@ -120,10 +138,8 @@ export function ProductsSection() {
         </Reveal>
         <Reveal y={16} delay={0.06}>
           <p className="mt-4 max-w-xl text-sm leading-relaxed text-neutral-400">
-            Alongside the demonstration data, we build the systems that run on
-            the other end of it — vision models deployed where the cameras
-            already are, and the stations that teach the next people to train
-            them.
+            Two lines, one software core: the stations that teach Physical AI,
+            and the box that runs it on a factory floor with the uplink pulled.
           </p>
         </Reveal>
 

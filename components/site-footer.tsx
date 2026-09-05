@@ -21,10 +21,10 @@ const CONTACTS = [
 ]
 
 const NAV = [
-  { href: '#what-we-collect', label: 'What we collect' },
-  { href: '#coverage', label: 'Coverage' },
-  { href: '#who-its-for', label: "Who it's for" },
+  { href: '#problem', label: 'The problem' },
   { href: '#products', label: 'Products' },
+  { href: '#who-its-for', label: "Who it's for" },
+  { href: '#coverage', label: 'Made in Almaty' },
 ]
 
 export function SiteFooter() {
@@ -40,8 +40,8 @@ export function SiteFooter() {
               </span>
             </div>
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-neutral-500">
-              Human demonstration data for training vision-language-action
-              models.
+              Affordable robotics and rugged edge AI computers — for schools,
+              labs and the factory floor.
             </p>
           </div>
 
@@ -91,7 +91,7 @@ export function SiteFooter() {
             © {new Date().getFullYear()} Athena Labs. All rights reserved.
           </p>
           <p className="font-mono text-[11px] tracking-wider text-neutral-700">
-            BUILT FOR ROBOT FOUNDATION MODELS
+            PHYSICAL AI · ALMATY, KAZAKHSTAN
           </p>
         </div>
       </div>

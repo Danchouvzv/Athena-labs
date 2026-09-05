@@ -98,10 +98,10 @@ export function HeroSection() {
               className="max-w-xl text-4xl font-medium leading-[1.1] tracking-tight md:text-[3.25rem]"
             >
               <span className="text-neutral-500">
-                Humanoid robots learn from people first —{' '}
+                Physical AI should not start at $15,000 —{' '}
               </span>
               <span className="bg-gradient-to-br from-white via-neutral-100 to-neutral-400 bg-clip-text text-transparent">
-                we collect the human demonstration data that trains VLA models.
+                we build the robot arms and edge AI computers here in Almaty.
               </span>
             </motion.h1>
 
@@ -113,14 +113,14 @@ export function HeroSection() {
                 href="#cta"
                 className="group flex items-center gap-2 rounded-full bg-neutral-50 px-6 py-3 text-sm font-medium text-neutral-900 transition-all duration-200 hover:-translate-y-0.5 hover:bg-white hover:shadow-[0_0_32px_rgba(255,255,255,0.28)]"
               >
-                Get the data card
+                Book a demo
                 <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />
               </a>
               <a
-                href="#what-we-collect"
+                href="#products"
                 className="group flex items-center gap-2 rounded-full border border-white/15 px-6 py-3 text-sm text-neutral-300 transition-all duration-200 hover:-translate-y-0.5 hover:border-white/30 hover:bg-white/5 hover:text-neutral-50"
               >
-                See the data types
+                See the line-up
                 <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />
               </a>
             </motion.div>

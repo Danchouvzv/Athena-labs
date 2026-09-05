@@ -12,13 +12,14 @@ export function CtaSection() {
       <div className="container py-24">
         <Reveal blur y={20}>
           <h2 className="max-w-xl text-3xl font-medium tracking-tight text-neutral-50 md:text-4xl">
-            See a sample episode and the full spec sheet.
+            See a station run, or put an Edge Core on your line.
           </h2>
         </Reveal>
 
         <Reveal delay={0.12} y={16}>
           <p className="mt-4 max-w-md text-sm text-neutral-400">
-            Camera layouts, formats, QA process and pricing — in one data card.
+            Specs, the 36-hour course outline, lead times and pricing — in
+            one reply.
           </p>
         </Reveal>
 
@@ -37,7 +38,7 @@ export function CtaSection() {
               type="submit"
               className="group flex items-center gap-2 rounded-full bg-neutral-50 px-5 py-2.5 text-sm font-medium text-neutral-900 transition-all duration-200 hover:-translate-y-0.5 hover:bg-white hover:shadow-[0_0_28px_rgba(255,255,255,0.25)]"
             >
-              Get the data card
+              Book a demo
               <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
             </button>
             <span className="text-sm text-neutral-500">

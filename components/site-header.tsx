@@ -6,10 +6,10 @@ import { LogoMark } from '@/components/logo-mark'
 import { cn } from '@/lib/utils'
 
 const NAV_LINKS = [
-  { href: '#what-we-collect', label: 'What we collect' },
-  { href: '#coverage', label: 'Coverage' },
-  { href: '#who-its-for', label: "Who it's for" },
+  { href: '#problem', label: 'The problem' },
   { href: '#products', label: 'Products' },
+  { href: '#who-its-for', label: "Who it's for" },
+  { href: '#coverage', label: 'Made in Almaty' },
 ]
 
 export function SiteHeader() {
@@ -77,7 +77,7 @@ export function SiteHeader() {
             href="#cta"
             className="group hidden items-center gap-1.5 rounded-full bg-neutral-50 px-4 py-2 text-[13px] font-medium text-neutral-900 transition-all duration-200 hover:bg-white hover:shadow-[0_0_24px_rgba(255,255,255,0.3)] md:flex"
           >
-            Get the data card
+            Book a demo
             <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
           </a>
 
@@ -118,7 +118,7 @@ export function SiteHeader() {
             onClick={() => setMenuOpen(false)}
             className="mt-1 flex items-center justify-center gap-1.5 rounded-2xl bg-neutral-50 px-4 py-2.5 font-medium text-neutral-900"
           >
-            Get the data card
+            Book a demo
             <ArrowRight className="h-3.5 w-3.5" />
           </a>
         </nav>

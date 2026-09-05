@@ -5,30 +5,37 @@ import { Reveal, EASE } from '@/components/ui/reveal'
 
 const STATS = [
   {
-    value: '30+',
-    label: 'Scenes, from lab rigs to apartments, cafés and stores',
+    value: '$30,000+',
+    label: 'Revenue from stations already delivered to Kazakh schools',
   },
-  { value: '200+', label: 'Objects, with lighting and camera-view variation' },
   {
-    value: '30–60 Hz',
-    label: 'Timestamp-synchronized streams, 15–60 s episodes',
+    value: '3 schools',
+    label: 'Tamos Fiztech, Pythagor and Bilim-Innovation, running now',
+  },
+  {
+    value: '2–3 lessons',
+    label:
+      'Before a student has basic control of the arm, by their teachers’ count',
   },
 ]
 
+/** Heights are the price, scaled — the whole point of the chart is that the
+ *  imported column dwarfs both of ours. */
 const BARS = [
-  { name: 'UMI', streams: '2 streams', height: 130 },
-  { name: 'Bimanual teleop', streams: '5 streams', height: 230 },
-  { name: 'Humanoid · multi-view', streams: '7+ streams', height: 320 },
+  { name: 'Athena Arm Edu', price: '$600', height: 60 },
+  { name: 'Athena Arm Research', price: '$1,500', height: 150 },
+  { name: 'Nearest import', price: '$3,000–15,000+', height: 320 },
 ]
 
 const TAGS = [
-  'Language instructions per task',
-  'Scene metadata: objects, lighting, camera views',
-  'Per-episode QA labeling',
-  'Consent releases',
+  'Open Python SDK',
+  'ROS2 / MoveIt2',
+  'MuJoCo / Isaac Sim',
+  'Teleoperation mode',
+  'Pre-installed Vision Stack',
 ]
 
-export function ScalingSection() {
+export function TractionSection() {
   const reduce = useReducedMotion()
 
   return (
@@ -36,7 +43,7 @@ export function ScalingSection() {
       <div className="container py-24">
         <Reveal blur y={18}>
           <h2 className="text-3xl font-medium tracking-tight text-neutral-50 md:text-4xl">
-            Scaling the capture
+            Already in classrooms, at a fifth of the price
           </h2>
         </Reveal>
 
@@ -96,7 +103,7 @@ export function ScalingSection() {
                   viewport={{ once: true, amount: 0.15 }}
                   transition={{ duration: 0.4, delay: 0.6 + i * 0.14 }}
                 >
-                  {bar.streams}
+                  {bar.price}
                 </motion.span>
               </div>
             ))}

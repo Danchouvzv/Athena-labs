@@ -13,14 +13,17 @@ const MARKERS = [
 ]
 
 const TIERS = [
-  { tier: 'Tier I', label: 'Bimanual teleop and humanoid capture in the lab' },
   {
-    tier: 'Tier II',
-    label: 'UMI handheld capture in apartments, cafés and stores',
+    tier: '3 days',
+    label: 'From our Almaty warehouse. Importers quote 2–4 months, plus customs',
   },
   {
-    tier: 'Tier III',
-    label: 'Egocentric video of everyday household and work tasks',
+    tier: 'On site',
+    label: 'Our own workshop swaps parts and 3D-prints replacements here',
+  },
+  {
+    tier: '36 hours',
+    label: 'A finished course in Russian, written against the school programme',
   },
 ]
 
@@ -67,13 +70,13 @@ export function CoverageSection() {
 
       <div className="container relative z-10 w-full py-28 md:py-24">
         <p className="font-mono text-xs tracking-widest text-neutral-500">
-          COVERAGE
+          MADE IN ALMATY
         </p>
         <Reveal blur y={18}>
           <h2 className="mt-4 max-w-md text-3xl font-medium leading-tight tracking-tight text-neutral-50 md:text-4xl">
-            From lab rigs
+            Built, shipped and
             <br />
-            to the real world
+            serviced from here
           </h2>
         </Reveal>
 
