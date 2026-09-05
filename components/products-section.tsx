@@ -1,9 +1,38 @@
-import { ArrowUpRight, Cpu, ShieldCheck, Video } from 'lucide-react'
+import {
+  ArrowUpRight,
+  Cpu,
+  GraduationCap,
+  Hand,
+  Package,
+  ShieldCheck,
+  Video,
+} from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
 import { Reveal } from '@/components/ui/reveal'
+
+interface Product {
+  number: string
+  name: string
+  status: string
+  tagline: string
+  summary: string
+  description: string
+  /** Hard numbers worth pulling out of the prose. Optional — not every
+   *  product leads with a price. */
+  facts?: { label: string; value: string; note: string }[]
+  points: { icon: LucideIcon; title: string; body: string }[]
+  uses: string[]
+  href: string
+  cta: string
+}
+
+/** Each product gets its own subdomain of the main site, so a visitor never
+ *  leaves the Athena namespace on the way to one. */
+const site = (sub: string) => `https://${sub}.athenaa.xyz`
 
 /** The lab ships more than the dataset. Each entry renders as one panel, so
  *  the next product is an object in this array and nothing else. */
-const PRODUCTS = [
+const PRODUCTS: Product[] = [
   {
     number: '01',
     name: 'Argus',
@@ -31,8 +60,49 @@ const PRODUCTS = [
       },
     ],
     uses: ['PPE compliance', 'Traffic & plates', 'Audience & attention'],
-    href: 'https://arguss-topaz.vercel.app/',
+    href: site('argus'),
     cta: 'Request a demo',
+  },
+  {
+    number: '02',
+    name: 'Kratos',
+    status: 'EDITION 01',
+    tagline: 'Teleop stations for a new era of edtech robotics.',
+    summary: '$600 a kit — three schools already running it.',
+    description:
+      'A student drives the follower arm through the leader arm and feels the task before a model ever sees it. Every run is recorded as a dataset, and that dataset is what the policy learns from.',
+    facts: [
+      {
+        label: 'Full kit',
+        value: '$600',
+        note: 'against $35,000 for an industrial manipulator',
+      },
+      {
+        label: 'Already running',
+        value: '3 schools',
+        note: 'Tamos Fiztech, Pythagor, Bilim-Innovation',
+      },
+    ],
+    points: [
+      {
+        icon: Hand,
+        title: 'Hands first, autonomy second',
+        body: 'The student feels the task through the leader arm before a model ever sees it — teleoperation, then dataset capture, then a policy that runs on its own.',
+      },
+      {
+        icon: Package,
+        title: 'The whole station in one crate',
+        body: 'Two SO-101 arms, leader and follower, with cameras and mounts — assembled, wired and calibrated before it ships. Ubuntu, Python and the training stack come pre-installed and version-pinned.',
+      },
+      {
+        icon: GraduationCap,
+        title: 'Curriculum and teacher training',
+        body: 'Lesson plans for every grade, classroom-tested in three schools first. We train your teacher until they can run the class without us, then stay on call for the school year.',
+      },
+    ],
+    uses: ['Dataset capture', 'Policy training', 'Autonomous rollout'],
+    href: site('kratos'),
+    cta: 'Book a demo',
   },
 ]
 
@@ -52,7 +122,8 @@ export function ProductsSection() {
           <p className="mt-4 max-w-xl text-sm leading-relaxed text-neutral-400">
             Alongside the demonstration data, we build the systems that run on
             the other end of it — vision models deployed where the cameras
-            already are.
+            already are, and the stations that teach the next people to train
+            them.
           </p>
         </Reveal>
 
@@ -81,7 +152,7 @@ export function ProductsSection() {
                         className="group/name inline-flex items-center gap-1.5 transition-colors hover:text-white"
                       >
                         {product.name}
-                        <ArrowUpRight className="h-4 w-4 text-neutral-600 transition-all duration-200 group-hover/name:translate-x-0.5 group-hover/name:-translate-y-0.5 group-hover/name:text-neutral-300" />
+                        <ArrowUpRight className="h-4 w-4 text-neutral-600 transition-all duration-200 group-hover/name:-translate-y-0.5 group-hover/name:translate-x-0.5 group-hover/name:text-neutral-300" />
                       </a>
                     </h3>
                     <span className="flex items-center gap-1.5 rounded-full border border-emerald-400/25 bg-emerald-400/10 py-0.5 pl-2 pr-2.5 font-mono text-[10px] tracking-widest text-emerald-300">
@@ -104,6 +175,24 @@ export function ProductsSection() {
                     {product.description}
                   </p>
 
+                  {product.facts && (
+                    <dl className="mt-7 grid gap-6 border-t border-white/10 pt-6 sm:grid-cols-2">
+                      {product.facts.map((fact) => (
+                        <div key={fact.label}>
+                          <dt className="font-mono text-[10px] tracking-widest text-neutral-600">
+                            {fact.label.toUpperCase()}
+                          </dt>
+                          <dd className="mt-1.5 text-2xl font-medium tracking-tight text-neutral-50">
+                            {fact.value}
+                          </dd>
+                          <dd className="mt-1 text-xs leading-relaxed text-neutral-500">
+                            {fact.note}
+                          </dd>
+                        </div>
+                      ))}
+                    </dl>
+                  )}
+
                   <div className="mt-7 flex flex-wrap gap-2">
                     {product.uses.map((use) => (
                       <span
@@ -122,7 +211,7 @@ export function ProductsSection() {
                     className="group mt-8 inline-flex items-center gap-2 rounded-full bg-neutral-50 px-6 py-3 text-sm font-medium text-neutral-900 transition-all duration-200 hover:-translate-y-0.5 hover:bg-white hover:shadow-[0_0_32px_rgba(255,255,255,0.28)]"
                   >
                     {product.cta}
-                    <ArrowUpRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                    <ArrowUpRight className="h-4 w-4 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
                   </a>
 
                   {/* Spells out where the button goes */}
@@ -156,11 +245,11 @@ export function ProductsSection() {
             </Reveal>
           ))}
 
-          {/* Keeps the list honest while there is only one shipped product */}
+          {/* Keeps the list honest — more products are in build */}
           <Reveal y={16} delay={0.1}>
             <div className="flex flex-wrap items-center justify-between gap-4 rounded-3xl border border-dashed border-white/10 px-8 py-6">
               <p className="font-mono text-xs tracking-widest text-neutral-600">
-                MORE IN BUILD
+                NEXT UP
               </p>
               <a
                 href="#cta"
