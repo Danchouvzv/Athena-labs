@@ -28,8 +28,12 @@ interface Product {
 }
 
 /** Each product gets its own subdomain of the main site, so a visitor never
- *  leaves the Athena namespace on the way to one. */
-const site = (sub: string) => `https://${sub}.athenaa.xyz`
+ *  leaves the Athena namespace on the way to one. In dev the same middleware
+ *  answers on <sub>.localhost, which browsers resolve to this machine. */
+const site = (sub: string) =>
+  process.env.NODE_ENV === 'development'
+    ? `http://${sub}.localhost:3000`
+    : `https://${sub}.athenaa.xyz`
 
 /** The lab ships more than the dataset. Each entry renders as one panel, so
  *  the next product is an object in this array and nothing else. */
