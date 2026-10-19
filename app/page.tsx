@@ -6,6 +6,7 @@ import { CoverageSection } from '@/components/coverage-section'
 import { AudienceSection } from '@/components/audience-section'
 import { ProductsSection } from '@/components/products-section'
 import { CtaSection } from '@/components/cta-section'
+import { TeamSection } from '@/components/team-section'
 import { SiteFooter } from '@/components/site-footer'
 
 export default function Home() {
@@ -19,6 +20,7 @@ export default function Home() {
       <AudienceSection />
       <ProductsSection />
       <CtaSection />
+      <TeamSection />
       <SiteFooter />
     </main>
   )

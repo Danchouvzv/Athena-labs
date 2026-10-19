@@ -10,6 +10,7 @@ const NAV_LINKS = [
   { href: '#products', label: 'Products' },
   { href: '#who-its-for', label: "Who it's for" },
   { href: '#coverage', label: 'Made in Almaty' },
+  { href: '#team', label: 'Team' },
 ]
 
 export function SiteHeader() {
