@@ -1,10 +1,11 @@
+import Image from 'next/image'
 import { Reveal } from '@/components/ui/reveal'
 
 const FOUNDERS = [
-  { name: 'Anuar Zhambakin', initials: 'AZ' },
-  { name: 'Daniyal Talgatov', initials: 'DT' },
-  { name: 'Arnur Togambayev', initials: 'AT' },
-  { name: 'Alemger Baipeisov', initials: 'AB' },
+  { name: 'Anuar Zhambakin', photo: '/team/anuar.jpg' },
+  { name: 'Daniyal Talgatov', photo: '/team/daniyal.jpg' },
+  { name: 'Arnur Togambayev', photo: '/team/arnur.jpg' },
+  { name: 'Alemger Baipeisov', photo: '/team/alemger.jpg' },
 ]
 
 export function TeamSection() {
@@ -23,8 +24,14 @@ export function TeamSection() {
         <div className="mt-14 grid grid-cols-1 gap-10 border-t border-white/10 pt-10 sm:grid-cols-2 lg:grid-cols-4">
           {FOUNDERS.map((founder, i) => (
             <Reveal key={founder.name} delay={i * 0.1} y={22} className="group">
-              <div className="flex h-14 w-14 items-center justify-center rounded-full border border-white/15 bg-white/[0.03] font-mono text-sm tracking-wider text-neutral-400 transition-all duration-300 group-hover:border-white/30 group-hover:text-neutral-50 group-hover:shadow-[0_0_24px_rgba(255,255,255,0.08)]">
-                {founder.initials}
+              <div className="relative aspect-square overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] transition-colors duration-300 group-hover:border-white/25">
+                <Image
+                  src={founder.photo}
+                  alt={founder.name}
+                  fill
+                  sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+                  className="object-cover object-top grayscale transition-all duration-500 group-hover:scale-[1.03] group-hover:grayscale-0"
+                />
               </div>
               <h3 className="mt-5 text-base text-neutral-50">{founder.name}</h3>
               <p className="mt-1 text-sm text-neutral-500">Co-founder</p>
