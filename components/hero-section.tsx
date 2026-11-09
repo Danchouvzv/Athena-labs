@@ -1,10 +1,11 @@
 'use client'
 
 import { motion, useReducedMotion } from 'framer-motion'
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight, ArrowUpRight } from 'lucide-react'
 import { SplineScene } from '@/components/ui/splite'
 import { Spotlight } from '@/components/ui/spotlight'
 import { EASE } from '@/components/ui/reveal'
+import { TETSU_URL } from '@/components/tetsu-section'
 
 /** Fades the canvas out before the bottom of the section, so the robot ends in
  *  darkness rather than at a hard edge. */
@@ -93,6 +94,23 @@ export function HeroSection() {
         <div className="grid w-full items-center gap-8 py-12 md:grid-cols-[1fr_1.15fr] md:gap-4 md:py-0">
           {/* Left content */}
           <motion.div variants={container} initial="hidden" animate="show">
+            {/* Flagship callout — sends visitors straight to Tetsu */}
+            <motion.a
+              variants={item}
+              href={TETSU_URL}
+              target="_blank"
+              rel="noreferrer noopener"
+              className="group mb-7 inline-flex items-center gap-2.5 rounded-full border border-white/10 bg-white/[0.04] py-1 pl-1 pr-3.5 text-[13px] text-neutral-300 backdrop-blur transition-colors duration-200 hover:border-white/25 hover:text-neutral-50"
+            >
+              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#d9483b] text-xs font-bold text-white">
+                鉄
+              </span>
+              <span>
+                <span className="text-neutral-50">Tetsu</span>
+                <span className="text-neutral-500"> — our AI hardware engineer</span>
+              </span>
+              <ArrowUpRight className="h-3.5 w-3.5 text-neutral-500 transition-all duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-neutral-200" />
+            </motion.a>
             <motion.h1
               variants={item}
               className="max-w-xl text-4xl font-medium leading-[1.1] tracking-tight md:text-[3.25rem]"

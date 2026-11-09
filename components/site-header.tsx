@@ -6,6 +6,7 @@ import { LogoMark } from '@/components/logo-mark'
 import { cn } from '@/lib/utils'
 
 const NAV_LINKS = [
+  { href: '#tetsu', label: 'Tetsu' },
   { href: '#problem', label: 'The problem' },
   { href: '#products', label: 'Products' },
   { href: '#who-its-for', label: "Who it's for" },

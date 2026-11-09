@@ -1,5 +1,6 @@
 import { SiteHeader } from '@/components/site-header'
 import { HeroSection } from '@/components/hero-section'
+import { TetsuSection } from '@/components/tetsu-section'
 import { ProblemSection } from '@/components/problem-section'
 import { TractionSection } from '@/components/traction-section'
 import { CoverageSection } from '@/components/coverage-section'
@@ -14,6 +15,7 @@ export default function Home() {
     <main className="bg-black">
       <SiteHeader />
       <HeroSection />
+      <TetsuSection />
       <ProblemSection />
       <TractionSection />
       <CoverageSection />

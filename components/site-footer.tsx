@@ -21,6 +21,7 @@ const CONTACTS = [
 ]
 
 const NAV = [
+  { href: '#tetsu', label: 'Tetsu' },
   { href: '#problem', label: 'The problem' },
   { href: '#products', label: 'Products' },
   { href: '#who-its-for', label: "Who it's for" },
